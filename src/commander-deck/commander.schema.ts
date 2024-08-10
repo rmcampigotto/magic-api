@@ -5,7 +5,7 @@ const commanderSchema = new Schema({
     commanderID: Number,
     name: { type: String, required: true },
     color: { type: String, required: true },
-    cards: { type: Array, requires: true }
+    cards: { type: Array<Object>, requires: true }
 }, {
     timestamps: true
 });

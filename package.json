@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "prestart": "docker-compose up -d",
     "start": "tsx main.ts",
     "start:dev": "tsx watch main.ts",
     "test": "jest"

@@ -12,6 +12,15 @@ class CommanderController {
         }
     }
 
+    async findOneAndReturnCommanderId(req: Request, res: Response) {
+        try {
+            const commander = await commanderService.findOneAndReturnCommanderId(req.params.id);
+            return res.status(200).json(commander);
+        } catch (error) {
+            return res.status(404).json(`ERRO AO BUSCAR ID [${req.params.id}]: ` + error);
+        }
+    }
+
     async findAll(req: Request, res: Response) {
         try {
             const consult = await commanderService.findAll();

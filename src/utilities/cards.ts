@@ -1,48 +1,47 @@
 import commanderService from "../commander-deck/commander.service";
 import _export from "./export";
+import mtgService from "./mtg.service";
 import { Request, Response } from "express";
 
-class Cards{
+class Cards {
 
-    async get100(req: Request, res: Response){
+    async get100(req: Request, res: Response) {
         try {
-            
-            let cards = {
-                name: String,
-                color: String,
-                Ability: String
-            };
-
-            let deck = {
+            const deck = {
                 commander: {
-                    commanderId: Number,
-                    name: String,
-                    color: String
+                    commanderId: 0,
+                    name: '',
+                    color: ''
                 },
-                cards: Array()
+                cards: [] as Array<{ name: string, color: string, Ability: string }>
             };
 
             const commanderResponse = await commanderService.findAll();
+            const commander = commanderResponse[0];
 
-            //@ts-ignore
-            deck.commander.commanderId = commanderResponse[0].commanderId;
-            //@ts-ignore
-            deck.commander.name = commanderResponse[0].name;
-            //@ts-ignore
-            deck.commander.color = commanderResponse[0].color;
+            // Garantindo que o commander exista antes de atribuir valores
+            if (commander) {
+                deck.commander.commanderId = commander.commanderID;
+                deck.commander.name = commander.name;
+                deck.commander.color = commander.color;
 
-            //@ts-ignore
-            commanderResponse[0].cards.forEach(card => {
-                cards.name = card.name;
-                cards.color = card.color;
-                cards.Ability = card.Ability;
+                const mtgCards = await mtgService.getCardsByColor(commander.color);
 
-                deck.cards.push(cards);
-            });
+                mtgCards.forEach(card => {
+                    deck.cards.push({
+                        name: card.name,
+                        color: card.colors.join(', '),
+                        Ability: card.text || ''
+                    });
+                });
+            } else {
+                return res.status(404).json('Nenhum comandante encontrado');
+            }
 
-            if(req.params.export == '1'){
+            if (req.params.export == '1') {
                 _export.exportJson(deck);
             }
+
             return res.status(200).json(deck);
         } catch (error) {
             return res.status(404).json('ERRO AO BUSCAR AS 100 CARTAS DO DECK: ' + error);

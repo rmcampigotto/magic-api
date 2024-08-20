@@ -1,15 +1,21 @@
-import mongoose, { Schema, model } from "mongoose";
-const AutoIncrement = require('mongoose-sequence');
+import mongoose, { Schema, model, Document } from "mongoose";
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
+// Definição do esquema Commander
 const commanderSchema = new Schema({
     commanderID: Number,
     name: { type: String, required: true },
     color: { type: String, required: true },
-    cards: { type: Array<Object>, requires: true }
+    cards: [{
+        name: { type: String, required: true },
+        color: { type: String, required: true },
+        Ability: { type: String, required: true }
+    }]
 }, {
     timestamps: true
 });
 
-commanderSchema.plugin(AutoIncrement(mongoose), { inc_field: 'commanderID' });
+// Adicionando auto incremento para o campo commanderID
+commanderSchema.plugin(AutoIncrement, { inc_field: 'commanderID' });
 
 export default model('Commander', commanderSchema);

@@ -24,6 +24,7 @@
   "dependencies": {
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
+    "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
     "mongoose": "^8.5.2",

@@ -1,5 +1,7 @@
 import commanderModel from "./commander.schema";
+
 class CommanderService {
+
     async create(commanderJSON: any) {
         return await commanderModel.create(commanderJSON);
     }
@@ -23,6 +25,7 @@ class CommanderService {
     async deleteById(ID: String){
         return await commanderModel.findOneAndDelete({ commanderID: ID });
     }
+    
 }
 
 export default new CommanderService();

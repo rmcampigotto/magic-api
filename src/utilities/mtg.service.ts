@@ -3,15 +3,14 @@ import axios from 'axios';
 class MTGService {
     private readonly baseURL: String = 'https://api.magicthegathering.io/v1';
 
-    // Busca a carta do Commander pelo nome
     async getCommanderByName(name: String) {
         try {
             const response = await axios.get(`${this.baseURL}/cards`, {
-                params: { name: name, pageSize: 1 } // Limita a busca a um único resultado
+                params: { name: name, pageSize: 1 }
             });
             const cards = response.data.cards;
             if (cards.length > 0) {
-                return cards[0]; // Retorna a carta do Commander
+                return cards[0];
             } else {
                 throw new Error(`Commander ${name} not found`);
             }
@@ -21,11 +20,10 @@ class MTGService {
         }
     }
 
-    // Busca as 99 cartas do deck com base na cor
     async getDeckByColor(color: String) {
         try {
             const response = await axios.get(`${this.baseURL}/cards`, {
-                params: { colors: color, pageSize: 99 } // Limita a busca a 99 resultados
+                params: { colors: color, pageSize: 99 }
             });
             return response.data.cards;
         } catch (error) {
@@ -34,7 +32,6 @@ class MTGService {
         }
     }
 
-    // Busca o deck completo (Commander + 99 cartas)
     async getFullDeck(commanderName: String, color: String) {
         try {
             const commander = await this.getCommanderByName(commanderName);

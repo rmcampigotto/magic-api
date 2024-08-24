@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { CommanderService } from './commander.service';
 import { CreateCommanderDto } from './dto/create-commander.dto';
 import { UpdateCommanderDto } from './dto/update-commander.dto';
+import { plainToInstance } from 'class-transformer';
 import { AuthGuard } from 'src/auth/auth.guard';
 import mtgApi from 'src/utilities/mtgApi';
+import utilities from 'src/utilities/export'
 
 @Controller('commander')
 export class CommanderController {
@@ -69,8 +71,26 @@ export class CommanderController {
     try {
       
       const result = await mtgApi.getCommanderByNameAndCards(commanderName);
+      const commadnerDto = plainToInstance(CreateCommanderDto, result);
 
-      return {message: `Busca na API realizada com sucesso:  ${result.cards}`}
+      this.commanderService.create(commadnerDto);
+
+      return {message: `Busca na API realizada com sucesso e salvo no banco!`};
+    } catch (error) {
+      return { message: `Erro ao buscar na API e salvar no banco: ${error}` };
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('export')
+  async deckExport() {
+    try {
+      
+      const result = await this.commanderService.findAll();
+
+      utilities.exportJson(result);
+
+      return {message: `Deck exportado!`};
     } catch (error) {
       return { message: `Erro ao buscar na API e salvar no banco: ${error}` };
     }

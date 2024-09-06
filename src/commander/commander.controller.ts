@@ -4,14 +4,18 @@ import { CreateCommanderDto } from './dto/create-commander.dto';
 import { UpdateCommanderDto } from './dto/update-commander.dto';
 import { plainToInstance } from 'class-transformer';
 import { AuthGuard } from 'src/auth/auth.guard';
-import mtgApi from 'src/utilities/mtgApi';
-import utilities from 'src/utilities/export'
+import   mtgApi from 'src/utils/mtgApi';
+import   utilities  from 'src/utils/export'
+import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from 'src/auth/roles/decorators/roles.decorator';
+import { Role } from 'src/auth/roles/enums/roles.enum';
 
 @Controller('commander')
 export class CommanderController {
   constructor(private readonly commanderService: CommanderService) { }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('create')
   create(@Body() createUserDto: CreateCommanderDto) {
     try {
@@ -43,7 +47,8 @@ export class CommanderController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Patch('update/:commanderName')
   update(@Param('commanderName') commanderName: String, @Body() updateUserDto: UpdateCommanderDto) {
     try {
@@ -54,7 +59,8 @@ export class CommanderController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Delete('delete/:commanderName')
   remove(@Param('commanderName') commanderName: String) {
     try {

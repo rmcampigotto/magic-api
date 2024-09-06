@@ -3,12 +3,15 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Role } from 'src/auth/roles/enums/roles.enum';
+import { RolesGuard } from 'src/auth/roles/roles.guard';import { Roles } from 'src/auth/roles/decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) { };
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -40,7 +43,8 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Patch('update/:id')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     try {
@@ -51,7 +55,8 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Delete('delete/:id')
   remove(@Param('id') id: number) {
     try {

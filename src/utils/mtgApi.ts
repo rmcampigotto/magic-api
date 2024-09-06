@@ -52,21 +52,7 @@ class MtgClass {
             throw error;
         }
     }
-
-    // async getFullDeck(commanderName: String, color: String) {
-    //     try {
-    //         const commander = await this.getCommanderByName(commanderName);
-    //         const deck = await this.getDeckByColor(color);
-
-    //         return {
-    //             commander,
-    //             deck
-    //         };
-    //     } catch (error) {
-    //         console.error('Error fetching full deck from MTG API:', error);
-    //         throw error;
-    //     }
-    // }
+    
 }
 
 export default new MtgClass();

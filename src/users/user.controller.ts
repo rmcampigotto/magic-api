@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Param, Delete, Patch, UseGuards } from '@n
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { Role } from 'src/auth/roles/enums/roles.enum';
-import { RolesGuard } from 'src/auth/roles/roles.guard';import { Roles } from 'src/auth/roles/decorators/roles.decorator';
+import { AuthGuard } from '../auth/auth.guard';
+import { Role } from '../auth/roles/enums/roles.enum';
+import { RolesGuard } from '../auth/roles/roles.guard';
+import { Roles } from '../auth/roles/decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -23,6 +24,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Get('findAll')
   findAll() {
     try {
@@ -34,6 +36,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Get('findById/:id')
   findOne(@Param('id') username: String) {
     try {

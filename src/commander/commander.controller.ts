@@ -3,12 +3,12 @@ import { CommanderService } from './commander.service';
 import { CreateCommanderDto } from './dto/create-commander.dto';
 import { UpdateCommanderDto } from './dto/update-commander.dto';
 import { plainToInstance } from 'class-transformer';
-import { AuthGuard } from 'src/auth/auth.guard';
-import   mtgApi from 'src/utils/mtgApi';
-import   utilities  from 'src/utils/export'
-import { RolesGuard } from 'src/auth/roles/roles.guard';
-import { Roles } from 'src/auth/roles/decorators/roles.decorator';
-import { Role } from 'src/auth/roles/enums/roles.enum';
+import { AuthGuard } from '../auth/auth.guard';
+import   mtgApi from '../utils/mtgApi';
+import   utilities  from '../utils/export'
+import { RolesGuard } from '../auth/roles/roles.guard';
+import { Roles } from '../auth/roles/decorators/roles.decorator';
+import { Role } from '../auth/roles/enums/roles.enum';
 
 @Controller('commander')
 export class CommanderController {
@@ -27,6 +27,7 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Get('findAll')
   findAll() {
     try {
@@ -38,6 +39,7 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Get('findById/:commanderName')
   findOne(@Param('commanderName') commanderName: String) {
     try {
@@ -72,6 +74,7 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Post('apiGetAndSave/:commanderName')
   async apiGetAndSave(@Param('commanderName') commanderName: String) {
     try {
@@ -88,6 +91,7 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Get('export')
   async deckExport() {
     try {

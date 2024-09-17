@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, SchemaType } from "mongoose";
 
 export type CommanderDocument = HydratedDocument<Commander>;
 
@@ -15,6 +15,8 @@ export class Commander {
     @Prop({ required: true })
     cards: Array<object>;
 
+    @Prop({ required: true, type: Number, ref: "User" })
+    userID: Number;
 }
 
 export const CommanderSchema = SchemaFactory.createForClass(Commander);

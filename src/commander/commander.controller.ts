@@ -27,7 +27,8 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
+  // Retirando Role.USER -> Item 2 | Entrega 2 = Crie uma rota para listar todos os baralhos (somente um usuário com permissão admin pode usar essa rota)
+  @Roles(Role.ADMIN)
   @Get('findAll')
   findAll() {
     try {
@@ -40,10 +41,10 @@ export class CommanderController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Get('findById/:commanderName')
-  findOne(@Param('commanderName') commanderName: String) {
+  @Get('findById/:commanderName/:userId')
+  findOne(@Param('commanderName') commanderName: String, @Param('useriId') userId: Number) {
     try {
-      return this.commanderService.findOne(commanderName);
+      return this.commanderService.findOne(commanderName, userId);
     } catch (error) {
       return { message: `Erro ao procurar o commander: ${error}` };
     }

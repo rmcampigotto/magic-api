@@ -8,7 +8,8 @@ class MtgClass {
         let commander = {
             commanderName: String,
             color: String,
-            cards: Array()
+            cards: Array(),
+            userId: Number,
         }; 
 
         try {
@@ -30,6 +31,8 @@ class MtgClass {
                     commander.cards.push(card);
 
                 });
+
+                // IMPLEMENTAR O SALVAMENTO DO "USERID", BUSCAR FORMAS DE PEGAR O USUÁRIO DE ACORDO COM O LOGIN
 
                 return commander;
             } else {

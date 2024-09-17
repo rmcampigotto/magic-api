@@ -14,8 +14,8 @@ export class CommanderService {
         return this.commanderModel.find().exec()
       }
 
-    async findOne(commanderName: String): Promise<Commander> {
-        return this.commanderModel.findOne({commanderName: commanderName}).exec()
+    async findOne(commanderName: String, userID: Number): Promise<Commander> {
+        return this.commanderModel.findOne({commanderName: commanderName, userID: userID}).exec()
     }
 
     async create(createCommanderDto: CreateCommanderDto){

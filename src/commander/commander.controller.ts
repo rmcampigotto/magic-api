@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { CommanderService } from './commander.service';
 import { CreateCommanderDto } from './dto/create-commander.dto';
 import { UpdateCommanderDto } from './dto/update-commander.dto';
@@ -30,8 +30,10 @@ export class CommanderController {
   // Retirando Role.USER -> Item 2 | Entrega 2 = Crie uma rota para listar todos os baralhos (somente um usuário com permissão admin pode usar essa rota)
   @Roles(Role.ADMIN)
   @Get('findAll')
-  findAll() {
+  findAll(@Req() req: Request) {
     try {
+      const userId = req['user'].id;
+      return userId;
       return this.commanderService.findAll();
     } catch (error) {
       return { message: `Erro ao buscar os commanders: ${error}` };
@@ -41,9 +43,10 @@ export class CommanderController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Get('findById/:commanderName/:userId')
-  findOne(@Param('commanderName') commanderName: String, @Param('useriId') userId: Number) {
+  @Get('findById/:commanderName')
+  findOne(@Param('commanderName') commanderName: String, @Req() req: Request) {
     try {
+      const userId = req['user'].id;
       return this.commanderService.findOne(commanderName, userId);
     } catch (error) {
       return { message: `Erro ao procurar o commander: ${error}` };
@@ -77,10 +80,10 @@ export class CommanderController {
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Post('apiGetAndSave/:commanderName')
-  async apiGetAndSave(@Param('commanderName') commanderName: String) {
+  async apiGetAndSave(@Param('commanderName') commanderName: String, @Req() req: Request) {
     try {
-      
-      const result = await mtgApi.getCommanderByNameAndCards(commanderName);
+      const userId = req['user'].id;
+      const result = await mtgApi.getCommanderByNameAndCards(commanderName, userId);
       const commadnerDto = plainToInstance(CreateCommanderDto, result);
 
       this.commanderService.create(commadnerDto);

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
-import { UsersController } from './user.controller';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])],
-  providers: [UsersService],
-  controllers: [UsersController],
-  exports: [UsersService, UserModule]
+  providers: [UserService],
+  controllers: [UserController],
+  exports: [UserService, UserModule]
 })
 export class UserModule {}

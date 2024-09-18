@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 const saltOrRounds = 10;
 
 @Injectable()
-export class UsersService {
+export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
     async findAll(): Promise<User[]> {

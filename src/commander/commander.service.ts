@@ -19,7 +19,7 @@ export class CommanderService {
     }
 
     async create(createCommanderDto: CreateCommanderDto){
-        return this.commanderModel.create({commanderName: createCommanderDto.commanderName, color: createCommanderDto.color, cards: createCommanderDto.cards})
+        return this.commanderModel.create({commanderName: createCommanderDto.commanderName, color: createCommanderDto.color, cards: createCommanderDto.cards, userId: createCommanderDto.userId})
     }
 
     async update(commanderName: String, updateCommanderDto: UpdateCommanderDto): Promise<Commander> {

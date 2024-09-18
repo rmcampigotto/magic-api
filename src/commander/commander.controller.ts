@@ -27,13 +27,10 @@ export class CommanderController {
   }
 
   @UseGuards(AuthGuard)
-  // Retirando Role.USER -> Item 2 | Entrega 2 = Crie uma rota para listar todos os baralhos (somente um usuário com permissão admin pode usar essa rota)
   @Roles(Role.ADMIN)
   @Get('findAll')
   findAll(@Req() req: Request) {
     try {
-      const userId = req['user'].id;
-      return userId;
       return this.commanderService.findAll();
     } catch (error) {
       return { message: `Erro ao buscar os commanders: ${error}` };
@@ -82,8 +79,8 @@ export class CommanderController {
   @Post('apiGetAndSave/:commanderName')
   async apiGetAndSave(@Param('commanderName') commanderName: String, @Req() req: Request) {
     try {
-      const userId = req['user'].id;
-      const result = await mtgApi.getCommanderByNameAndCards(commanderName, userId);
+      const userId = req['user'];
+      const result = await mtgApi.getCommanderByNameAndCards(commanderName, userId.sub);
       const commadnerDto = plainToInstance(CreateCommanderDto, result);
 
       this.commanderService.create(commadnerDto);

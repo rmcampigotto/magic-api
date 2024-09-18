@@ -15,8 +15,8 @@ export class Commander {
     @Prop({ required: true })
     cards: Array<object>;
 
-    @Prop({ required: true, type: Number, ref: "User" })
-    userID: Number;
+    @Prop({ required: true, ref: 'Users' })
+    userId: Number;
 }
 
 export const CommanderSchema = SchemaFactory.createForClass(Commander);

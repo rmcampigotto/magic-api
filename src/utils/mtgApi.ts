@@ -1,14 +1,16 @@
 import axios from 'axios';
+import { UserController } from 'src/users/user.controller';
 
 class MtgClass {
     private readonly baseURL: String = 'https://api.magicthegathering.io/v1';
 
-    async getCommanderByNameAndCards(name: String) {
+    async getCommanderByNameAndCards(name: String, userId: NumberConstructor) {
 
         let commander = {
             commanderName: String,
             color: String,
-            cards: Array()
+            cards: Array(),
+            userId: Number,
         }; 
 
         try {
@@ -30,6 +32,8 @@ class MtgClass {
                     commander.cards.push(card);
 
                 });
+
+                commander.userId = userId;
 
                 return commander;
             } else {

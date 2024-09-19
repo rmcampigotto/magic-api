@@ -12,14 +12,18 @@ export class CommanderService {
 
     async findAll(): Promise<Commander[]> {
         return this.commanderModel.find().exec()
-      }
+    }
 
-    async findOne(commanderName: String): Promise<Commander> {
-        return this.commanderModel.findOne({commanderName: commanderName}).exec()
+    async findOne(commanderName: String, userId: Number): Promise<Commander> {
+        return this.commanderModel.findOne({commanderName: commanderName, userID: userId}).exec()
+    }
+
+    async findAllByUser(userId: Number): Promise<Commander[]> {
+      return this.commanderModel.find({ userId: userId }).exec();
     }
 
     async create(createCommanderDto: CreateCommanderDto){
-        return this.commanderModel.create({commanderName: createCommanderDto.commanderName, color: createCommanderDto.color, cards: createCommanderDto.cards})
+        return this.commanderModel.create({commanderName: createCommanderDto.commanderName, color: createCommanderDto.color, cards: createCommanderDto.cards, userId: createCommanderDto.userId})
     }
 
     async update(commanderName: String, updateCommanderDto: UpdateCommanderDto): Promise<Commander> {

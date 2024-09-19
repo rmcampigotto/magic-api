@@ -17,34 +17,45 @@ export class CommanderController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Post('create')
-  create(@Body() createUserDto: CreateCommanderDto) {
+  create(@Body() createCommanderDto: CreateCommanderDto) {
     try {
-      this.commanderService.create(createUserDto);
-      return { message: `Commander salvo com sucesso!`, user: createUserDto };
+      this.commanderService.create(createCommanderDto);
+      return { message: `Commander salvo com sucesso!`, commander: createCommanderDto };
     } catch (error) {
       return { message: `Erro ao salvar commander: ${error}` };
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  @Get('findAll')
-  findAll(@Req() req: Request) {
+  @Get('findAllAdmin')
+  findAll() {
     try {
       return this.commanderService.findAll();
     } catch (error) {
       return { message: `Erro ao buscar os commanders: ${error}` };
     }
-
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.USER,Role.ADMIN)
+  @Get('findAll')
+  findAllByUser(@Req() req: Request) {
+    try {
+      const userId = req['user'];
+      return this.commanderService.findAllByUser(userId.sub);
+    } catch (error) {
+      return { message: `Erro ao buscar os commanders: ${error}` };
+    }
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Get('findById/:commanderName')
   findOne(@Param('commanderName') commanderName: String, @Req() req: Request) {
     try {
-      const userId = req['user'].id;
-      return this.commanderService.findOne(commanderName, userId);
+      const userId = req['user'];
+      return this.commanderService.findOne(commanderName, userId.sub);
     } catch (error) {
       return { message: `Erro ao procurar o commander: ${error}` };
     }
@@ -74,7 +85,7 @@ export class CommanderController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Post('apiGetAndSave/:commanderName')
   async apiGetAndSave(@Param('commanderName') commanderName: String, @Req() req: Request) {
@@ -91,7 +102,7 @@ export class CommanderController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Get('export')
   async deckExport() {

@@ -11,8 +11,8 @@ import { Roles } from '../auth/roles/decorators/roles.decorator';
 export class UserController {
   constructor(private readonly usersService: UserService) { };
 
-  //@UseGuards(AuthGuard, RolesGuard)
-  //@Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Post('create')
   create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -23,7 +23,7 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Get('findAll')
   findAll() {
@@ -35,7 +35,7 @@ export class UserController {
 
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
   @Get('findById/:id')
   findOne(@Param('id') username: String) {

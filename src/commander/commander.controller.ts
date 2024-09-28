@@ -118,4 +118,9 @@ export class CommanderController {
     }
   }
 
+  @Get(':param')
+  async getCachedValue(@Param('param') param: string): Promise<any> {
+    return this.commanderService.getData(param);
+  }
+
 }

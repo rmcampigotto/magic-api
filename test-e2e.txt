@@ -1,0 +1,26 @@
+ FAIL  test/app.e2e-spec.ts (12.969 s)
+  AppController (e2e)
+    × /api/commander (GET) (1 ms)                                                                                                                                                                                              
+                                                                                                                                                                                                                               
+  ● AppController (e2e) › /api/commander (GET)                                                                                                                                                                                 
+                                                                                                                                                                                                                               
+    thrown: "Exceeded timeout of 10000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+       7 |   let app: INestApplication;
+       8 |
+    >  9 |   beforeAll(async () => {
+         |   ^
+      10 |     const moduleFixture: TestingModule = await Test.createTestingModule({
+      11 |       imports: [AppModule],
+      12 |     }).compile();
+
+      at app.e2e-spec.ts:9:3
+      at Object.<anonymous> (app.e2e-spec.ts:6:1)
+
+Test Suites: 1 failed, 1 total                                                                                                                                                                                                 
+Tests:       1 failed, 1 total                                                                                                                                                                                                 
+Snapshots:   0 total
+Time:        13.068 s
+Ran all test suites.
+Jest did not exit one second after the test run has completed.

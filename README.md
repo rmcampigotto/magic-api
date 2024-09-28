@@ -56,6 +56,12 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+
+# artillery test
+$ artillery run test-load.yaml
+
+# k6 test
+$ k6 run load-test.js
 ```
 
 ## Resources

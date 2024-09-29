@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CommanderService } from './commander.service';
 import { CreateCommanderDto } from './dto/create-commander.dto';
 import { UpdateCommanderDto } from './dto/update-commander.dto';
@@ -9,6 +9,7 @@ import   utilities  from '../utils/export'
 import { RolesGuard } from '../auth/roles/roles.guard';
 import { Roles } from '../auth/roles/decorators/roles.decorator';
 import { Role } from '../auth/roles/enums/roles.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('commander')
 export class CommanderController {
@@ -26,8 +27,8 @@ export class CommanderController {
     }
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  //@UseGuards(AuthGuard, RolesGuard)
+  //@Roles(Role.ADMIN)
   @Get('findAllAdmin')
   findAll() {
     try {
@@ -121,6 +122,18 @@ export class CommanderController {
   @Get(':param')
   async getCachedValue(@Param('param') param: string): Promise<any> {
     return this.commanderService.getData(param);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @Post('uploadJson')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFileJson(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
+    const userId = req['user'];
+    const jsonData = JSON.parse(file.buffer.toString());
+    const commadnerDto = plainToInstance(CreateCommanderDto, jsonData[0]);
+    commadnerDto['userId'] = userId.sub;
+    return this.commanderService.create(commadnerDto);
   }
 
 }

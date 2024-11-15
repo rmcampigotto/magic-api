@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test WebSocket</title>
+</head>
+<body>
+  <h1>WebSocket Test</h1>
+  <p id="messages">Waiting for messages...</p>
+  <script>
+    // Substitua a URL pelo endereço do servidor, se não for localhost
+    const socket = new WebSocket('ws://localhost:3000');
+
+    // Quando a conexão é aberta
+    socket.onopen = () => {
+      console.log('WebSocket connected!');
+    };
+
+    // Quando uma mensagem é recebida
+    socket.onmessage = (event) => {
+      const messages = document.getElementById('messages');
+      messages.innerHTML += `<p>${event.data}</p>`;
+    };
+
+    // Quando há um erro
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    // Quando a conexão é fechada
+    socket.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
+  </script>
+</body>
+</html>

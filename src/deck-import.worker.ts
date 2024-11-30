@@ -1,15 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ClientProxy, ClientsModule, Transport } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
+import { MetricsService } from './metrics.service';
 
 @Injectable()
 export class DeckImportWorker {
   private readonly logger = new Logger(DeckImportWorker.name);
 
-  constructor(@Inject('RABBITMQ_SERVICE') private client: ClientProxy) {}
-
+  constructor(@Inject('RABBITMQ_SERVICE') private client: ClientProxy, private readonly metricsService: MetricsService) {}
+  
   async processImport(deckData: any) {
     this.logger.log('Iniciando a importação do baralho...');
+    this.metricsService.incrementDeckImport();
 
     // Processa o deckData (validação, integração, etc.)
     // Simulação do processo de importação

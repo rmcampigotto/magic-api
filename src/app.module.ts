@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
 import { CommanderModule } from './commander/commander.module';
-import {Commander, CommanderSchema} from './commander/schemas/commander.schema'
+import { Commander, CommanderSchema} from './commander/schemas/commander.schema'
 import { CacheModule } from '@nestjs/cache-manager';
 import { CommanderService } from './commander/commander.service';
 import { CommanderController } from './commander/commander.controller';
@@ -13,6 +13,7 @@ import { NotificationGateway } from './notification/notification.gateway';
 import { RabbitMQService } from './rabbitmq/rabbitmq.service';
 import { makeCounterProvider, PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsService } from './metrics.service';
+
 
 
 @Module({
@@ -41,7 +42,7 @@ import { MetricsService } from './metrics.service';
       name: 'deck_imports_total',
       help: 'Total de importações de baralhos',
     }),],
-  exports: [CommanderService, MetricsService],
+  exports: [CommanderService, MetricsService, RabbitMQService],
 })
 
 export class AppModule implements OnModuleInit {
@@ -50,6 +51,11 @@ export class AppModule implements OnModuleInit {
   async onModuleInit() {
     await this.rabbitMQService.connect();
     await this.rabbitMQService.processDeckImport();
-  }  
+
+    await this.rabbitMQService.createQueue('deck_import_queue');
+    await this.rabbitMQService.createQueue('deck_updates_queue');
+    
+  }
+
 }
 

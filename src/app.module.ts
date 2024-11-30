@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
@@ -9,7 +9,11 @@ import { CommanderService } from './commander/commander.service';
 import { CommanderController } from './commander/commander.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DeckImportWorker } from './deck-import.worker';
-import { NotificationGateway } from './notification.gateway';
+import { NotificationGateway } from './notification/notification.gateway';
+import { RabbitMQService } from './rabbitmq/rabbitmq.service';
+import { makeCounterProvider, PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { MetricsService } from './metrics.service';
+
 
 @Module({
   imports: [
@@ -28,12 +32,24 @@ import { NotificationGateway } from './notification.gateway';
     ]),
     MongooseModule.forRoot('mongodb://localhost:27017/magic-api'), CommanderModule, AuthModule, UserModule,
     CacheModule.register(),
-    MongooseModule.forFeature([{name: Commander.name, schema: CommanderSchema}])
+    MongooseModule.forFeature([{name: Commander.name, schema: CommanderSchema}]),
+    PrometheusModule.register()
   ],
   controllers: [CommanderController],
-  providers: [CommanderService, DeckImportWorker, NotificationGateway],
-  exports: [CommanderService],
+  providers: [CommanderService, DeckImportWorker, RabbitMQService, NotificationGateway, MetricsService,
+    makeCounterProvider({
+      name: 'deck_imports_total',
+      help: 'Total de importações de baralhos',
+    }),],
+  exports: [CommanderService, MetricsService],
 })
 
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly rabbitMQService: RabbitMQService) {}
+
+  async onModuleInit() {
+    await this.rabbitMQService.connect();
+    await this.rabbitMQService.processDeckImport();
+  }  
+}
 

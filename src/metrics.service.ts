@@ -9,6 +9,6 @@ export class MetricsService {
   ) {}
 
   incrementDeckImport() {
-    this.deckImports.inc(); // Incrementa o contador
+    this.deckImports.inc();
   }
 }
